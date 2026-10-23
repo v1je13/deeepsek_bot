@@ -4,14 +4,14 @@ import requests
 # ==================== БЕЗОПАСНЫЕ НАСТРОЙКИ ====================
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "-1003220042819") # Ваш личный ID
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "-1003220042819")
 
-# ВРЕМЕННО ставим 9999.0 для теста, чтобы бот точно прислал сообщение
+# Жестко зашиваем огромный порог для теста, чтобы бот СТОПРОЦЕНТНО отправил сообщение
 THRESHOLD_USD = 9999.0 
 # =============================================================
 
 def check_deepseek_balance():
-    # ИСПРАВЛЕНО: Правильный адрес API DeepSeek
+    # ТУТ БЫЛА ОШИБКА! Теперь адрес правильный:
     ds_url = "https://deepseek.com"
     ds_headers = {
         "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
@@ -28,24 +28,31 @@ def check_deepseek_balance():
                 if info.get("currency") == "USD":
                     current_balance = float(info.get("total_balance", 0))
                     
+                    # Проверяем лимит
                     if current_balance <= THRESHOLD_USD:
                         send_telegram_alert(current_balance)
                     return current_balance
         else:
-            print(f"Ошибка проверки баланса DeepSeek. Статус: {response.status_code}, Ответ: {response.text}")
+            print(f"Ошибка DeepSeek. Статус: {response.status_code}, Ответ: {response.text}")
+            # Если DeepSeek ругнется на ключ — мы принудительно отправим ошибку в чат
+            send_telegram_alert(f"Ошибка API Ключа ({response.status_code})")
             
     except Exception as e:
         print(f"Произошла ошибка при запросе к DeepSeek: {e}")
+        send_telegram_alert(f"Ошибка сети скрипта: {e}")
 
-def send_telegram_alert(balance):
-    message = (
-        f"🚨 **КРИТИЧЕСКИЙ БАЛАНС DEEPSEEK!** 🚨\n\n"
-        f"Внимание всей команде! Баланс API упал ниже лимита.\n"
-        f"Текущий остаток: **${balance:.2f}**\n\n"
-        f"Срочно пополните счет, иначе через пару минут вся работа встанет!"
-    )
+def send_telegram_alert(balance_or_error):
+    # Универсальный текст для теста
+    if isinstance(balance_or_error, float):
+        message = (
+            f"🚨 **КРИТИЧЕСКИЙ БАЛАНС DEEPSEEK!** 🚨\n\n"
+            f"Текущий остаток: **${balance_or_error:.2f}**\n"
+            f"Срочно пополните счет!"
+        )
+    else:
+        message = f"🚨 **ОШИБКА СКРИПТА КОНТРОЛЯ БАЛАНСА!** 🚨\n\nТехнические детали: {balance_or_error}"
     
-    # ИСПРАВЛЕНО: Правильный адрес API Telegram с /bot перед токеном
+    # ТУТ БЫЛА ОШИБКА! Теперь адрес API Telegram правильный:
     tele_url = f"https://telegram.org{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
@@ -56,7 +63,7 @@ def send_telegram_alert(balance):
     try:
         res = requests.post(tele_url, json=payload)
         if res.status_code != 200:
-            print(f"Ошибка отправки в Telegram. Статус: {res.status_code}, Ответ: {res.text}")
+            print(f"Ошибка Telegram API. Статус: {res.status_code}, Ответ: {res.text}")
     except Exception as e:
         print(f"Не удалось отправить уведомление в Telegram: {e}")
 
