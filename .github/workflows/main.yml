@@ -1,0 +1,27 @@
+name: DeepSeek Balance Checker
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # Запуск скрипта каждые 15 минут
+  workflow_dispatch: # Позволяет запускать проверку вручную кнопкой
+
+jobs:
+  check-balance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python deepseek_watcher.py
