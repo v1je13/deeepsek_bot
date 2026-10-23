@@ -2,8 +2,8 @@ name: DeepSeek Balance Checker
 
 on:
   schedule:
-    - cron: '*/15 * * * *' # Проверка каждые 15 минут
-  workflow_dispatch: # Позволяет запускать проверку вручную кнопкой
+    - cron: '*/15 * * * *' # СТРОГО КАЖДЫЕ 15 МИНУТ, круглосуточно и бесплатно
+  workflow_dispatch: # Позволяет запускать вручную кнопкой
 
 jobs:
   check-balance:
@@ -21,8 +21,4 @@ jobs:
         run: pip install requests
 
       - name: Run script
-        # ВОТ ЭТОТ БЛОК ОБЯЗАТЕЛЕН (он связывает секреты GitHub с кодом Python)
-        env:
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: python deepseek_watcher.py
