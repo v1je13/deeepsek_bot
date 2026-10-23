@@ -4,7 +4,7 @@ import requests
 # ==================== БЕЗОПАСНЫЕ НАСТРОЙКИ ====================
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "7508811818") # Ваш личный ID
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "-1003220042819") # Ваш личный ID
 
 # ВРЕМЕННО ставим 9999.0 для теста, чтобы бот точно прислал сообщение
 THRESHOLD_USD = 9999.0 
