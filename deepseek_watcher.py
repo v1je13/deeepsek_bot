@@ -1,17 +1,16 @@
 import requests
 
-# ==================== НАСТРОЙКИ СВЯЗИ ====================
+# ==================== ПРЯМЫЕ НАСТРОЙКИ СВЯЗИ ====================
 DEEPSEEK_API_KEY = "sk-d4eb2c9663fb4870909838f040f8d030" 
 TELEGRAM_BOT_TOKEN = "8661086712:AAH5q_Lu81OIaVVYLgptuKXh7vHK4ihRbVc"
 TELEGRAM_CHAT_ID = "-1003220042819"
 
-# Сейчас ставим огромный лимит $9999 для теста, чтобы бот СРАЗУ прислал сообщение
+# Жестко зашиваем лимит $9999 для 100% прохождения теста
 THRESHOLD_USD = 9999.0 
-# =========================================================
+# =============================================================
 
 def check_deepseek_balance():
-    # Адрес изменен на правильный технический эндпоинт API
-    ds_url = "https://deepseek.com"
+    ds_url = "https://api.deepseek.com/user/balance"
     ds_headers = {
         "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
         "Accept": "application/json"
@@ -31,7 +30,7 @@ def check_deepseek_balance():
         else:
             print(f"Ошибка DeepSeek API: {response.status_code}, {response.text}")
     except Exception as e:
-        print(f"Ошибка сети: {e}")
+        print(f"Ошибка сети или JSON: {e}")
 
 def send_telegram_alert(balance):
     message = (
