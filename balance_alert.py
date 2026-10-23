@@ -1,7 +1,7 @@
 import requests
 
 # ==================== ПРЯМЫЕ НАСТРОЙКИ СВЯЗИ ====================
-DEEPSEEK_API_KEY = "sk-d4eb2c9663fb4870909838f040f8d030" 
+DEEPSEEK_API_KEY = "sk-1fffe28edcbb4af3a025514002faeeea" 
 TELEGRAM_BOT_TOKEN = "8661086712:AAH5q_Lu81OIaVVYLgptuKXh7vHK4ihRbVc"
 TELEGRAM_CHAT_ID = "-1003220042819"
 
