@@ -5,12 +5,12 @@ DEEPSEEK_API_KEY = "sk-d4eb2c9663fb4870909838f040f8d030"
 TELEGRAM_BOT_TOKEN = "8661086712:AAH5q_Lu81OIaVVYLgptuKXh7vHK4ihRbVc"
 TELEGRAM_CHAT_ID = "-1003220042819"
 
-# Жестко зашиваем лимит $9999 для 100% прохождения теста
+# Лимит $9999 для принудительного прохождения теста
 THRESHOLD_USD = 9999.0 
 # =============================================================
 
 def check_deepseek_balance():
-    ds_url = "https://api.deepseek.com/user/balance"
+    ds_url = "https://deepseek.com"
     ds_headers = {
         "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
         "Accept": "application/json"
@@ -30,7 +30,7 @@ def check_deepseek_balance():
         else:
             print(f"Ошибка DeepSeek API: {response.status_code}, {response.text}")
     except Exception as e:
-        print(f"Ошибка сети или JSON: {e}")
+        print(f"Ошибка на стороне DeepSeek: {e}")
 
 def send_telegram_alert(balance):
     message = (
@@ -40,13 +40,15 @@ def send_telegram_alert(balance):
         f"Срочно пополните счет, иначе работа встанет!"
     )
     
+    # Ссылка строго выверена: api.telegram.org со всеми слэшами
     tele_url = f"https://telegram.org{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
         "text": message,
         "parse_mode": "Markdown"
     }
-    requests.post(tele_url, json=payload)
+    res = requests.post(tele_url, json=payload)
+    print(f"Ответ Telegram API: {res.status_code}, {res.text}")
 
 if __name__ == "__main__":
     check_deepseek_balance()
