@@ -1,6 +1,7 @@
 import requests
 
-# ==================== ПРЯМЫЕ НАСТРОЙКИ СВЯЗИ ====================
+# ==================== НАСТРОЙКИ СВЯЗИ ====================
+# Вставьте сюда ваш свежий API-ключ DeepSeek
 DEEPSEEK_API_KEY = "sk-1fffe28edcbb4af3a025514002faeeea" 
 TELEGRAM_BOT_TOKEN = "8661086712:AAH5q_Lu81OIaVVYLgptuKXh7vHK4ihRbVc"
 TELEGRAM_CHAT_ID = "-1003220042819"
@@ -10,14 +11,24 @@ THRESHOLD_USD = 9999.0
 # =============================================================
 
 def check_deepseek_balance():
-    ds_url = "https://deepseek.com"
+    ds_url = "https://api.deepseek.com/user/balance"
+    
+    # Добавлены обязательные заголовки, чтобы обойти защиту Cloudflare
     ds_headers = {
         "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
-        "Accept": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
     }
     
     try:
         response = requests.get(ds_url, headers=ds_headers)
+        
+        # Если ключ неверный или забанен, выведем понятный текст ошибки
+        if response.status_code == 401:
+            print("Ошибка: Платформа DeepSeek отклонила ключ (401 Unauthorized).")
+            return
+            
         if response.status_code == 200:
             data = response.json()
             for info in data.get("balance_infos", []):
@@ -28,9 +39,10 @@ def check_deepseek_balance():
                         send_telegram_alert(current_balance)
                     return current_balance
         else:
-            print(f"Ошибка DeepSeek API: {response.status_code}, {response.text}")
+            print(f"Сервер вернул статус {response.status_code}. Ответ: {response.text}")
+            
     except Exception as e:
-        print(f"Ошибка на стороне DeepSeek: {e}")
+        print(f"Техническая ошибка: {e}")
 
 def send_telegram_alert(balance):
     message = (
@@ -40,7 +52,6 @@ def send_telegram_alert(balance):
         f"Срочно пополните счет, иначе работа встанет!"
     )
     
-    # Ссылка строго выверена: api.telegram.org со всеми слэшами
     tele_url = f"https://telegram.org{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
@@ -48,7 +59,7 @@ def send_telegram_alert(balance):
         "parse_mode": "Markdown"
     }
     res = requests.post(tele_url, json=payload)
-    print(f"Ответ Telegram API: {res.status_code}, {res.text}")
+    print(f"Статус отправки в Telegram: {res.status_code}")
 
 if __name__ == "__main__":
     check_deepseek_balance()
