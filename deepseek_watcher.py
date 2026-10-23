@@ -9,7 +9,7 @@ import requests
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "-1003220042819") # ID чата можно оставить, он не секретный
-THRESHOLD_USD = float(os.getenv("THRESHOLD_USD", "10.0")) # Порог по умолчанию $10
+THRESHOLD_USD = float(os.getenv("THRESHOLD_USD", "20.0")) # Порог по умолчанию $10
 # =============================================================
 
 # Дальше весь остальной код скрипта остается без изменений...
