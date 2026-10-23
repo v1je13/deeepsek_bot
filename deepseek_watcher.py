@@ -8,7 +8,7 @@ import requests
 # Теперь скрипт ищет ключи в переменных окружения Render
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "-1003220042819") # ID чата можно оставить, он не секретный
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "7508811818") # ID чата можно оставить, он не секретный
 THRESHOLD_USD = float(os.getenv("THRESHOLD_USD", "20.0")) # Порог по умолчанию $10
 # =============================================================
 
