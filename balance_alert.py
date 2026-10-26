@@ -1,7 +1,7 @@
 // ==================== НАСТРОЙКИ ====================
-const DEEPSEEK_API_KEY = "sk-1fffe28edcbb4af3a025514002faeeea";
-const TELEGRAM_BOT_TOKEN = "8661086712:AAH5q_Lu81OIaVVYLgptuKXh7vHK4ihRbVc";
-const TELEGRAM_CHAT_ID = "-1003220042819";
+const DEEPSEEK_API_KEY = "";
+const TELEGRAM_BOT_TOKEN = "";
+const TELEGRAM_CHAT_ID = "";
 
 
 const THRESHOLD_USD = 15;
